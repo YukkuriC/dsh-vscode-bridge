@@ -1,0 +1,6 @@
+{
+    "meta": {
+        "title": "VS Code 链接",
+        "description": "在本地 VS Code 中打开聊天里的 vscode:// 链接。"
+    }
+}
