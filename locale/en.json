@@ -1,6 +1,6 @@
 {
     "meta": {
         "title": "VS Code links",
-        "description": "Open vscode:// links from chat in the local VS Code."
+        "description": "Open vscode:// links and hijack DSH links into the local VS Code."
     }
 }
