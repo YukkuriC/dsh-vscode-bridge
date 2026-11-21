@@ -1,0 +1,78 @@
+{
+    "name": "dsh-vscode-bridge",
+    "displayName": "%extension.displayName%",
+    "description": "%extension.description%",
+    "version": "0.1.0",
+    "publisher": "local",
+    "icon": "icon.png",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/YukkuriC/dsh-vscode-bridge.git",
+        "directory": "ext/vscode"
+    },
+    "engines": {
+        "vscode": "^1.74.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "main": "./extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "dsh-vscode-bridge.insertContent",
+                "title": "%command.insertContent.title%",
+                "category": "DSH"
+            },
+            {
+                "command": "dsh-vscode-bridge.insertPath",
+                "title": "%command.insertPath.title%",
+                "category": "DSH"
+            }
+        ],
+        "menus": {
+            "editor/context": [
+                {
+                    "command": "dsh-vscode-bridge.insertContent",
+                    "group": "navigation@100"
+                }
+            ],
+            "explorer/context": [
+                {
+                    "command": "dsh-vscode-bridge.insertPath",
+                    "group": "navigation@100"
+                }
+            ],
+            "scm/resourceState/context": [
+                {
+                    "command": "dsh-vscode-bridge.insertPath",
+                    "group": "navigation@100"
+                }
+            ],
+            "commandPalette": [
+                {
+                    "command": "dsh-vscode-bridge.insertPath",
+                    "when": "false"
+                }
+            ]
+        },
+        "configuration": {
+            "title": "%configuration.title%",
+            "properties": {
+                "dsh-vscode-bridge.attachCmd": {
+                    "type": "string",
+                    "default": "",
+                    "markdownDescription": "%config.attachCmd.description%"
+                }
+            }
+        }
+    },
+    "scripts": {
+        "link": "node scripts/linkSelf.js",
+        "link:force": "node scripts/linkSelf.js -f",
+        "package": "vsce package"
+    },
+    "devDependencies": {
+        "@vscode/vsce": "^3.0.0"
+    }
+}

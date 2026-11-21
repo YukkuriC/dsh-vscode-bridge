@@ -1,0 +1,8 @@
+{
+    "extension.displayName": "DSH VS Code Bridge",
+    "extension.description": "Send the editor selection's line range or file paths to the running DSH conversation through cli/attach.cmd.",
+    "command.insertContent.title": "Insert Content to DSH",
+    "command.insertPath.title": "Insert Path to DSH",
+    "configuration.title": "DSH",
+    "config.attachCmd.description": "Absolute path to the DSH plugin's `cli/attach.cmd`. Both commands warn and send nothing while this path is missing or is not a file."
+}

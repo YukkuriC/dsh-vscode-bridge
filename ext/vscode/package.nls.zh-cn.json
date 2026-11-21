@@ -1,0 +1,8 @@
+{
+    "extension.displayName": "DSH VS Code 桥接",
+    "extension.description": "通过 cli/attach.cmd 把编辑器选区的行范围或文件路径发送到运行中的 DSH 对话。",
+    "command.insertContent.title": "插入内容至 DSH",
+    "command.insertPath.title": "插入路径至 DSH",
+    "configuration.title": "DSH",
+    "config.attachCmd.description": "DSH 插件 `cli/attach.cmd` 的绝对路径。路径为空或不是文件时，两个命令都会弹出警告且不发送。"
+}

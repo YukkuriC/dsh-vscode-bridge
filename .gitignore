@@ -1,2 +1,4 @@
 node_modules/
 build/
+attach.sqlite
+attach.sqlite-*
