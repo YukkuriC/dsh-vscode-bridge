@@ -1,4 +1,7 @@
 node_modules/
 build/
-pnpm-lock.yaml
-package-lock.json
+
+*.md
+*.json
+*.yml
+*.yaml

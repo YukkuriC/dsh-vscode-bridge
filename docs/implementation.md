@@ -10,12 +10,13 @@
 
 ## 结构
 
-| 文件               | 职责                                  |
-| ------------------ | ------------------------------------- |
-| `index.js`         | 包入口，转出 `lib/host.js` 的导出     |
-| `lib/host.js`      | Cordis 插件：注册转发路由             |
-| `lib/open-link.js` | 把链接交给 Explorer（系统协议处理器） |
-| `lib/client.js`    | 链接拦截、打开入口拦截、插件页开关    |
+<!-- 紧凑表格，手动排版 -->
+|文件|职责|
+|---|---|
+|`index.js`|包入口，转出 `lib/host.js` 的导出|
+|`lib/host.js`|Cordis 插件：注册转发路由|
+|`lib/open-link.js`|把链接交给 Explorer（系统协议处理器）|
+|`lib/client.js`|链接拦截、attach 队列、引用序列化、插件页开关|
 
 ## Host
 
@@ -38,7 +39,8 @@
 - 外部入口：DSH 的 CLI 子命令不可由插件扩展，因此没有 `dsh attach`。发送方调用 `cli\attach.cmd <路径 | 路径:行号 | 路径:起-止 | URL>`（内部执行 `cli/attach.mjs` → `queueAttach`），或用任意 SQLite 驱动直接向 `attach.sqlite` 插入一行；两种方式都只写队列，不依赖 DSH 进程。
 - 存储：插件目录的 `attach.sqlite`（WAL）。连接开启 `PRAGMA busy_timeout = 5000`，写锁被另一进程占用时等待而不是立刻报 `database is locked`。表 `attach_messages(id, session_id, content, kind, created_at, consumed_at)`；`kind` 为 `text` 或 `image`。
 - 读取：`GET /vscode-bridge/attach/pending` 先比较 `attach.sqlite` 与 `attach.sqlite-wal` 的 `mtimeMs` + `size` 指纹。与上次相同就直接返回空列表，不执行任何 SQLite 语句；变了才取走未消费行并更新指纹。客户端仍按间隔发 HTTP，但空转时不读库。
-- 客户端：在 `conversation.input.dock` 挂载轮询器，间隔取插件页配置（默认 2000 毫秒）。该 slot 在 hero（未发首条消息的新对话）和活跃输入框下都会渲染；`conversation.composer.dock` 在 hero 下不渲染，挂在那里会让新对话永远不轮询。无 Session 的首页不挂轮询器，消息留在队列里，选定工作区后插入。文件路径通过 agent 上下文的 `slash/input-insert-reference` 事件插入为文件引用 chip（可点击的链接），行号并入 chip 名称（`文件:行` 或 `文件:起-止`）；HTTP(S) 地址按文本插入。插入被拒绝时保留到下一轮重试。
+- 客户端：在 `conversation.input.dock` 挂载轮询器，间隔取插件页配置（默认 2000 毫秒）。该 slot 在 hero（未发首条消息的新对话）和活跃输入框下都会渲染；`conversation.composer.dock` 在 hero 下不渲染，挂在那里会让新对话永远不轮询。无 Session 的首页不挂轮询器，消息留在队列里，选定工作区后插入。文件路径通过 agent 上下文的 `slash/input-insert-reference` 事件插入为文件引用 chip（可点击的链接），行号并入 chip 名称（`文件:行` 或 `文件:起-止`）。chip 使用插件自己的 `vscode-bridge` 引用来源：隐藏的 `ref` 以 JSON 保存绝对路径和行号，提交时 `codec.serialize` 输出 `@路径:行` / `@路径:起-止`（含空格的路径为 `@"路径":...`），因此 LLM 能看到行号。聊天正文里的文件链接点击时由 `openResource` 包装器剥离行号后缀，打开文件并跳到起始行。HTTP(S) 地址按文本插入。插入被拒绝时保留到下一轮重试。
+- 序列化示例：`D:\项目\extension.js:10-14` → chip `extension.js:10-14`，LLM 文本 `@D:\项目\extension.js:10-14`；含空格路径 → `@"D:\项目\my file.js":10-14`。
 - 图片：`link` 模式按文件引用 chip 插入；`attachment` 模式取回图片字节，构造 `File` 并以 `paste` 事件投给输入框编辑器，走正常的附件上传与卡片流程。
 
 ## VS Code 扩展
