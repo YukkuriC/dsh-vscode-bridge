@@ -35,8 +35,8 @@
         }
     },
     "scripts": {
-        "format": "prettier --write .",
-        "format:check": "prettier --check ."
+        "format": "prettier --write \"**/*.{js,mjs,cjs}\"",
+        "format:check": "prettier --check \"**/*.{js,mjs,cjs}\""
     },
     "devDependencies": {
         "prettier": "^3.10.1"
